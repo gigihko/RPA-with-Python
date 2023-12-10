@@ -1,4 +1,8 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+import time
+
+service = Service("C:\\Users\\LENOVO\\Documents\\Learning RPA\\chromedriver.exe")
 
 def get_driver():
     #set options to make browser easier
@@ -10,14 +14,22 @@ def get_driver():
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_argument("disable-blink-features=AutomationControlled")
 
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(service=service, options=options)
     driver.get("https://automated.pythonanywhere.com/")
 
     return driver
 
+def clean_text(text):
+  """Extract only the temperature of text"""
+  output = float(text.split(": ")[1])
+  return output
+
+
 def main():
-    driver = get_driver()
-    element = driver.find_element(by="xpath", value="/html/body/div[1]/div/h1[1]")
-    return element.text
+  driver = get_driver()
+  time.sleep(2)
+  element = driver.find_element(by="xpath", value="/html/body/div[1]/div/h1[2]")
+  return clean_text(element.text)
+
 
 print(main())
